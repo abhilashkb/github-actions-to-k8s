@@ -37,11 +37,6 @@ jobs:
     - name: Push Docker image
       run: docker push 224574/django-todo:${{ env.DOCK_TAG }}
 
-    - name: Set up Kubeconfig
-      uses: azure/setup-kubectl@v1
-      with:
-        version: 'v1.19.7'
-
     - name: Update deployment with new image
       run: sed -i "s|tagname|${{ env.DOCK_TAG }}|" kubernetes/django-deployment.yaml
 
