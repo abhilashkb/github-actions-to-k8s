@@ -40,9 +40,17 @@ jobs:
     - name: Update deployment with new image
       run: sed -i "s|tagname|${{ env.DOCK_TAG }}|" kubernetes/django-deployment.yaml
 
+    - name: Set up kubeconfig
+      id: setup-kubeconfig
+      run: |
+        echo "${{ secrets.KUBECONFIG }}"  > $HOME/.kube/config
+
+    - name: Ensure kubectl is installed
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'latest'
+
     - name: Deploy to Kubernetes
-      env:
-        KUBECONFIG: ${{ secrets.KUBECONFIG }}
       run: |
         kubectl get pods
         kubectl apply -f kubernetes/postgress-pv.yaml
